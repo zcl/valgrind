@@ -1,0 +1,28 @@
+
+wget http://valgrind.org/downloads/valgrind-3.15.0.tar.bz2
+apt-get install automake
+
+
+＃本地编译
+#sudo apt install valgrind
+./autogen.sh
+./configure --prefix=/opt/topband/output/x86
+make
+make install
+
+
+#交叉编译
+source /opt/rk3399/environment-toolchain.sh
+#CC=/opt/rk3399/bin/aarch64-linux-gcc 
+#CPP=/opt/rk3399/bin/aarch64-linux-cpp 
+#CXX=/opt/rk3399/bin/aarch64-linux-g++
+export CPPFLAGS="--sysroot=/opt/rk3399/aarch64-buildroot-linux-gnu/sysroot"
+export CFLAGS="--sysroot=/opt/rk3399/aarch64-buildroot-linux-gnu/sysroot"
+./autogen.sh
+./configure --host=aarch64-linux --prefix=/opt/topband/output/arm --enable-only64bit
+make 
+make install
+#--prefix= 指定的目录要与开发板上放置的目录一致，
+#不然运行valgrind时可能会出现“valgrind: failed to start tool ‘memcheck’ for platform ‘arm-linux’: No such file or directory”错误。
+#export VALGRIND_LIB="/home/dcj/valgrind/lib/valgrind"
+#chmod -R +x /home/dcj/valgrind/lib/valgrind/
